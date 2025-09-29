@@ -97,6 +97,25 @@
             animation: coin-spin 5s linear infinite;
             transform-style: preserve-3d; /* Required for a 3D flip/spin effect */
         }
+
+        /* Style for the new container wrapping each CLIN section */
+        .clin-section-wrapper {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 12px;
+            /* Use a slightly more opaque background for section wrapper for clear distinction */
+            background: rgba(255, 255, 255, 0.6); 
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Adjust internal header style when inside the new wrapper */
+        .clin-section-wrapper .clin-section-header {
+            border-bottom: none; /* Remove bottom border since the wrapper provides separation */
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
     </style>
 </head>
 <body class="font-sans p-4 md:p-8">
@@ -106,7 +125,7 @@
         <header class="flex flex-col sm:flex-row justify-between items-center glass-card mb-8">
             <!-- Watauga County Seal (Spinning) -->
             <div class="mb-4 sm:mb-0">
-                <!-- Updated path to use a generic Watauga Seal file name in the assets folder -->
+                <!-- Watauga Seal Path -->
                 <img src="assets/watauga_seal.png" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0A3D62/FFFFFF?text=Watauga+Seal';" alt="Seal of Watauga County" class="h-20 w-auto rounded-full shadow-lg watauga-seal-spin">
             </div>
 
@@ -118,7 +137,7 @@
 
             <!-- Thompson Consulting Services Logo -->
             <div class="mt-4 sm:mt-0">
-                <!-- Updated path to use a generic TCS Logo file name in the assets folder -->
+                <!-- Thompson Logo Path - Assuming this file is a PNG with a transparent background -->
                 <img src="assets/tcs_logo.png" onerror="this.onerror=null; this.src='https://placehold.co/180x60/FFC300/0A3D62?text=Thompson+Consulting';" alt="Thompson Consulting Services Logo" class="h-14 w-auto object-contain">
             </div>
         </header>
@@ -483,10 +502,14 @@
 
                 // Section header and responsive grid for its cards
                 return `
-                    <h3 class="clin-section-header text-lg font-extrabold border-b-2 pb-2 mb-4 mt-6">${section.title}</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
-                        ${cardsHtml}
+                    <!-- START: CLIN Section Wrapper (New Container) -->
+                    <div class="clin-section-wrapper mb-6">
+                        <h3 class="clin-section-header text-lg font-extrabold border-b-2 pb-2 mb-4">${section.title}</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            ${cardsHtml}
+                        </div>
                     </div>
+                    <!-- END: CLIN Section Wrapper -->
                 `;
             }).join('');
 
