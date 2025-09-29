@@ -11,13 +11,12 @@
     <style>
         /* Custom styling for the dashboard */
         :root {
-            /* Adjusted colors for better contrast on dark/translucent background */
-            --watauga-blue: #000000; /* Black */
-            --watauga-gold: #FFD700; /* Bright Gold */
-            --card-bg: rgba(255, 255, 255, 0.15); /* Translucent white base */
-            --inner-card-bg: rgba(255, 255, 255, 0.05); /* Very light background for inner CLIN cards */
-            --border-color: rgba(255, 255, 255, 0.5); /* Semi-transparent border */
-            --text-color: #F8F8FF; /* Light text color */
+            /* Adjusted colors for better contrast on light background */
+            --watauga-blue: #1C6E8D; /* Deep Blue for contrast on light background */
+            --watauga-gold: #FFC300; /* Gold for accents */
+            --card-bg: rgba(255, 255, 255, 0.4); /* Frosted Glass (light/colorless) */
+            --border-color: rgba(0, 0, 0, 0.1); /* Light border */
+            --text-color: #1F2937; /* Dark text for readability on light background */
         }
 
         /* Utility classes using the new colors */
@@ -26,76 +25,88 @@
         .border-watauga-blue { border-color: var(--watauga-blue); }
 
         body {
-            /* iOS Liquid Background effect: Subtle animated gradient */
-            background: linear-gradient(135deg, #0f4c75, #3282b8, #bbe1fa);
-            background-size: 400% 400%;
-            animation: gradient-animation 15s ease infinite;
-            color: var(--text-color); /* Default text color is light */
-        }
-        @keyframes gradient-animation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            /* Opaque Glass Background: Light, colorless foundation */
+            background-color: #F3F4F6; 
+            color: var(--text-color); 
         }
 
-        /* Glassmorphism Effect Class */
+        /* Glassmorphism Effect Class (Frosted Glass Containers) */
         .glass-card {
             background: var(--card-bg);
-            backdrop-filter: blur(15px); /* Key for glassmorphism */
+            backdrop-filter: blur(15px); /* Key for frosted glass */
             -webkit-backdrop-filter: blur(15px); /* Safari support */
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1); /* Subtle shadow for lift */
             padding: 1.5rem;
             transition: all 0.3s ease-in-out;
         }
         .glass-card:hover {
-            box-shadow: 0 16px 64px 0 rgba(0, 0, 0, 0.3);
-            transform: translateY(-4px);
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
         }
         
         /* Adjustments for text and internal elements */
         #app h1 {
-            color: var(--watauga-gold); /* Header text stand out */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            color: var(--watauga-blue); /* Header text stand out */
+            text-shadow: none;
         }
         
         #app p {
-            color: rgba(255, 255, 255, 0.8); /* Lighter gray for secondary text */
+            color: var(--text-color); /* Darker gray for secondary text */
         }
 
         #chart-title {
-            color: var(--watauga-gold); /* Chart titles should be bright */
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-            text-align: left; /* Align to left within the section */
+            color: var(--watauga-blue); /* Chart titles use primary accent color */
+            text-shadow: none;
+            text-align: left;
         }
         
         .clin-section-header {
             color: var(--watauga-blue); /* Section headers use primary accent color */
             border-bottom-color: var(--watauga-blue);
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            text-shadow: none;
+            font-weight: bold;
+        }
+        
+        /* Specific styling for internal CLIN card text to ensure readability */
+        .clin-card-text {
+            color: var(--text-color);
+        }
+        .clin-card-description {
+            color: #4B5563; /* Medium gray */
+        }
+        .clin-card-metric-label {
+            color: #6B7280; /* Slightly lighter gray */
+        }
+        .clin-card-metric-value {
+            color: var(--text-color);
+            font-weight: 900;
+        }
+        .text-watauga-gold {
+            color: var(--watauga-gold);
         }
     </style>
 </head>
 <body class="font-sans p-4 md:p-8">
 
     <div id="app" class="max-w-7xl mx-auto">
-        <!-- Dashboard Header & Logos (Glassmorphism Applied) -->
+        <!-- Dashboard Header & Logos (Frosted Glass Applied) -->
         <header class="flex flex-col sm:flex-row justify-between items-center glass-card mb-8">
             <!-- Watauga County Seal -->
             <div class="mb-4 sm:mb-0">
-                <img src="image_510333.png" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0A3D62/FFFFFF?text=Watauga+Seal';" alt="Seal of Watauga County" class="h-20 w-auto rounded-full shadow-lg">
+                <img src="assets/Watauga_Seal_3D.jpg" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0A3D62/FFFFFF?text=Watauga+Seal';" alt="Seal of Watauga County" class="h-20 w-auto rounded-full shadow-lg">
             </div>
 
             <!-- Title -->
             <div class="text-center">
                 <h1 class="text-3xl md:text-4xl font-extrabold leading-tight">USACE Watauga County Debris Report</h1>
-                <p class="mt-1 text-sm md:text-base">Progress Snapshot as of September 28, 2025</p>
+                <p class="mt-1 text-sm md:text-base clin-card-description">Progress Snapshot as of September 28, 2025</p>
             </div>
 
             <!-- Thompson Consulting Services Logo -->
             <div class="mt-4 sm:mt-0">
-                <img src="image_5106cf.png" onerror="this.onerror=null; this.src='https://placehold.co/180x60/FFC300/0A3D62?text=Thompson+Consulting';" alt="Thompson Consulting Services Logo" class="h-14 w-auto object-contain">
+                <img src="assets/TCS Logo.jpg" onerror="this.onerror=null; this.src='https://placehold.co/180x60/FFC300/0A3D62?text=Thompson+Consulting';" alt="Thompson Consulting Services Logo" class="h-14 w-auto object-contain">
             </div>
         </header>
 
@@ -107,23 +118,23 @@
         <!-- Charts Section: Now only two full-width sections for Volume and CLINs -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            <!-- 1. Debris Volume Breakdown Chart (Pie Chart) - Spans full width (Glassmorphism Applied) -->
+            <!-- 1. Debris Volume Breakdown Chart (Pie Chart) - Spans full width (Frosted Glass Applied) -->
             <div class="col-span-full glass-card border-t-4 border-watauga-blue" style="border-top-width: 4px;">
                 <div id="chart-title" class="text-center">Volume by Debris Class (CY)</div>
                 <div id="volume-chart" class="flex justify-center items-center h-80">
                     <svg id="volume-pie-chart" class="w-full h-full"></svg>
                 </div>
-                <p class="text-sm mt-4 text-center">Breakdown based on recorded debris class totals.</p>
+                <p class="text-sm mt-4 text-center clin-card-description">Breakdown based on recorded debris class totals.</p>
             </div>
         
-            <!-- 2. CLIN Performance Status (Cards/Rows) - Spans all columns (Glassmorphism Applied) -->
+            <!-- 2. CLIN Performance Status (Cards/Rows) - Spans all columns (Frosted Glass Applied) -->
             <div class="col-span-full glass-card flex flex-col border-t-4 border-watauga-blue" style="border-top-width: 4px;">
                 <div id="chart-title">CLIN NTE Breakdown</div>
                 <!-- CLIN cards container: Responsive grid for optimal viewing of many CLINs -->
                 <div id="clin-breakdown-container" class="flex-grow">
                     <!-- CLIN sections and cards will be injected here by JavaScript -->
                 </div>
-                <p class="text-sm mt-4 text-center">NTE Completion Status by Contract Line Item Number. (Estimated NTE for non-volume CLINs)</p>
+                <p class="text-sm mt-4 text-center clin-card-description">NTE Completion Status by Contract Line Item Number. (Estimated NTE for non-volume CLINs)</p>
             </div>
 
         </div>
@@ -280,9 +291,9 @@
             percentComplete: 9.58,
             projectDaysElapsed: projectDaysElapsed,
             volumeBreakdown: [
-                { class: "Vegetative (Non Urban)", cy: 27902, color: "#4CAF50" }, 
-                { class: "C&D (Non Urban)", cy: 5232, color: "#FF9800" }, 
-                { class: "Mulch/Reduced Chips", cy: 1744, color: "#795548" }
+                { class: "Vegetative (Non Urban)", cy: 27902, color: "#10B981" }, /* Green for Veg */
+                { class: "C&D (Non Urban)", cy: 5232, color: "#F59E0B" }, /* Amber for C&D */
+                { class: "Mulch/Reduced Chips", cy: 1744, color: "#78350F" } /* Brown for Mulch */
             ],
             clinSections: clinSections, 
         };
@@ -321,7 +332,13 @@
 
             const tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
-                .style("opacity", 0);
+                .style("opacity", 0)
+                .style("position", "absolute")
+                .style("background", "rgba(0, 0, 0, 0.7)")
+                .style("color", "white")
+                .style("padding", "8px")
+                .style("border-radius", "6px")
+                .style("pointer-events", "none"); // Tooltip should not block mouse events
 
             // Build the pie chart
             const arcs = svg.selectAll(".arc")
@@ -332,8 +349,8 @@
             arcs.append("path")
                 .attr("d", arc)
                 .attr("fill", d => color(d.data.class))
-                .attr("stroke", "rgba(0, 0, 0, 0.2)") /* Darker border for contrast */
-                .style("stroke-width", "3px")
+                .attr("stroke", "rgba(255, 255, 255, 0.8)") /* Light border for contrast on dark pie */
+                .style("stroke-width", "2px")
                 .on("mouseover", (event, d) => {
                     tooltip.transition()
                         .duration(200)
@@ -418,32 +435,32 @@
                     const percentText = percentValue.toFixed(2);
                     const barWidth = Math.min(100, percentValue); 
                     const barColor = percentValue >= 100 ? 'bg-red-500' : 'bg-watauga-blue';
-                    const textColor = percentValue >= 100 ? 'text-red-300 font-bold' : 'text-watauga-gold';
+                    const textColor = percentValue >= 100 ? 'text-red-500 font-bold' : 'text-watauga-blue';
                     const formattedNTE = item.nteQuantity.toLocaleString();
                     const formattedToDate = item.to_date_quantity.toLocaleString();
                     const status = percentValue >= 100 ? 'EXCEEDED' : 'On Track';
 
                     return `
                         <!-- Individual Row Container (Inner translucent card) -->
-                        <div class="p-3 rounded-xl border border-gray-400/50 bg-white/10 hover:bg-white/20 transition duration-150 shadow-inner">
+                        <div class="p-3 rounded-xl border border-gray-200/50 bg-white/50 hover:bg-white/70 transition duration-150 shadow-inner">
                             
                             <!-- CLIN Header & Percentage -->
                             <div class="flex justify-between items-center mb-2">
-                                <h4 class="text-base font-bold text-gray-100">${item.clin}</h4>
+                                <h4 class="text-base font-bold clin-card-text">${item.clin}</h4>
                                 <span class="text-sm ${textColor}">${percentText}% Complete</span>
                             </div>
 
-                            <p class="text-xs text-gray-300 truncate mb-2" title="${item.description}">${item.description}</p>
+                            <p class="text-xs clin-card-description truncate mb-2" title="${item.description}">${item.description}</p>
 
                             <!-- Progress Bar -->
-                            <div class="w-full bg-white/30 rounded-full h-3 mb-3">
+                            <div class="w-full bg-gray-300 rounded-full h-3 mb-3">
                                 <div class="h-3 rounded-full ${barColor} transition-all duration-700 ease-out" style="width: ${barWidth}%;"></div>
                             </div>
 
                             <!-- Metrics Grid -->
-                            <div class="grid grid-cols-3 text-sm text-gray-300 font-medium border-t pt-2 border-white/30">
-                                <div class="truncate">NTE (${item.uom}): <span class="text-white font-extrabold">${formattedNTE}</span></div>
-                                <div class="text-center truncate">To Date: <span class="text-white font-extrabold">${formattedToDate}</span></div>
+                            <div class="grid grid-cols-3 text-sm clin-card-metric-label font-medium border-t pt-2 border-gray-300">
+                                <div class="truncate">NTE (${item.uom}): <span class="clin-card-metric-value">${formattedNTE}</span></div>
+                                <div class="text-center truncate">To Date: <span class="clin-card-metric-value">${formattedToDate}</span></div>
                                 <div class="text-right truncate">Status: <span class="${textColor} font-extrabold">${status}</span></div>
                             </div>
                         </div>
@@ -453,7 +470,7 @@
 
                 // Section header and responsive grid for its cards
                 return `
-                    <h3 class="clin-section-header">${section.title}</h3>
+                    <h3 class="clin-section-header text-lg font-extrabold border-b-2 pb-2 mb-4 mt-6">${section.title}</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
                         ${cardsHtml}
                     </div>
@@ -499,8 +516,8 @@
                             </svg>
                         </div>
                         <div>
-                            <p class="text-xl font-bold text-white">${item.value}</p>
-                            <p class="text-sm text-gray-300">${item.title}</p>
+                            <p class="text-xl font-bold clin-card-metric-value">${item.value}</p>
+                            <p class="text-sm clin-card-metric-label">${item.title}</p>
                         </div>
                     </div>
                 `;
