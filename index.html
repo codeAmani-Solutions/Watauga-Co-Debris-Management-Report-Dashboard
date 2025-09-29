@@ -11,56 +11,86 @@
     <style>
         /* Custom styling for the dashboard */
         :root {
-            --watauga-blue: #0A3D62;
-            --watauga-gold: #FFC300;
+            /* Adjusted colors for better contrast on dark/translucent background */
+            --watauga-blue: #00BFFF; /* Lighter Blue */
+            --watauga-gold: #FFD700; /* Bright Gold */
+            --card-bg: rgba(255, 255, 255, 0.15); /* Translucent white base */
+            --inner-card-bg: rgba(255, 255, 255, 0.05); /* Very light background for inner CLIN cards */
+            --border-color: rgba(255, 255, 255, 0.5); /* Semi-transparent border */
+            --text-color: #F8F8FF; /* Light text color */
         }
+
+        /* Utility classes using the new colors */
         .text-watauga-blue { color: var(--watauga-blue); }
         .bg-watauga-blue { background-color: var(--watauga-blue); }
         .border-watauga-blue { border-color: var(--watauga-blue); }
-        .kpi-card {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s;
+
+        body {
+            /* iOS Liquid Background effect: Subtle animated gradient */
+            background: linear-gradient(135deg, #0f4c75, #3282b8, #bbe1fa);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            color: var(--text-color); /* Default text color is light */
         }
-        .kpi-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.15);
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        /* Style for the D3 tooltips */
-        .tooltip {
-            position: absolute;
-            text-align: center;
-            padding: 8px 12px;
-            font: 14px sans-serif;
-            background: #fff;
-            border: 0px;
-            border-radius: 8px;
-            pointer-events: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            z-index: 100;
+
+        /* Glassmorphism Effect Class */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px); /* Key for glassmorphism */
+            -webkit-backdrop-filter: blur(15px); /* Safari support */
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            transition: all 0.3s ease-in-out;
         }
+        .glass-card:hover {
+            box-shadow: 0 16px 64px 0 rgba(0, 0, 0, 0.3);
+            transform: translateY(-4px);
+        }
+        
+        /* Adjustments for text and internal elements */
+        #app h1 {
+            color: var(--watauga-gold); /* Header text stand out */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        #app p {
+            color: rgba(255, 255, 255, 0.8); /* Lighter gray for secondary text */
+        }
+
         #chart-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--watauga-blue);
-            margin-bottom: 1rem;
-            text-align: center;
+            color: var(--watauga-gold); /* Chart titles should be bright */
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            text-align: left; /* Align to left within the section */
+        }
+        
+        .clin-section-header {
+            color: var(--watauga-blue); /* Section headers use primary accent color */
+            border-bottom-color: var(--watauga-blue);
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans p-4 md:p-8">
+<body class="font-sans p-4 md:p-8">
 
     <div id="app" class="max-w-7xl mx-auto">
-        <!-- Dashboard Header & Logos -->
-        <header class="flex flex-col sm:flex-row justify-between items-center p-4 bg-white rounded-xl shadow-lg mb-8">
+        <!-- Dashboard Header & Logos (Glassmorphism Applied) -->
+        <header class="flex flex-col sm:flex-row justify-between items-center glass-card mb-8">
             <!-- Watauga County Seal -->
             <div class="mb-4 sm:mb-0">
-                <img src="image_510333.png" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0A3D62/FFFFFF?text=Watauga+Seal';" alt="Seal of Watauga County" class="h-20 w-auto rounded-full shadow-md">
+                <img src="image_510333.png" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0A3D62/FFFFFF?text=Watauga+Seal';" alt="Seal of Watauga County" class="h-20 w-auto rounded-full shadow-lg">
             </div>
 
             <!-- Title -->
             <div class="text-center">
-                <h1 class="text-3xl md:text-4xl font-extrabold text-watauga-blue leading-tight">USACE Watauga County Debris Report</h1>
-                <p class="text-gray-500 mt-1 text-sm md:text-base">Progress Snapshot as of September 28, 2025</p>
+                <h1 class="text-3xl md:text-4xl font-extrabold leading-tight">USACE Watauga County Debris Report</h1>
+                <p class="mt-1 text-sm md:text-base">Progress Snapshot as of September 28, 2025</p>
             </div>
 
             <!-- Thompson Consulting Services Logo -->
@@ -74,117 +104,201 @@
             <!-- KPIs will be dynamically added here -->
         </div>
 
-        <!-- Charts Section: Adjusted to a 3-column layout on large screens -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <!-- Charts Section: Now only two full-width sections for Volume and CLINs -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            <!-- 1. Debris Volume Breakdown Chart (Pie Chart) -->
-            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-watauga-blue">
-                <div id="chart-title">Volume by Debris Class (CY)</div>
+            <!-- 1. Debris Volume Breakdown Chart (Pie Chart) - Spans full width (Glassmorphism Applied) -->
+            <div class="col-span-full glass-card border-t-4 border-watauga-blue" style="border-top-width: 4px;">
+                <div id="chart-title" class="text-center">Volume by Debris Class (CY)</div>
                 <div id="volume-chart" class="flex justify-center items-center h-80">
                     <svg id="volume-pie-chart" class="w-full h-full"></svg>
                 </div>
-                <p class="text-sm text-gray-500 mt-4 text-center">Breakdown based on recorded debris class totals.</p>
+                <p class="text-sm mt-4 text-center">Breakdown based on recorded debris class totals.</p>
             </div>
-
-            <!-- 2. CLIN Performance Status (Replaced by Cards/Rows) -->
-            <!-- The flex-col class ensures the content stretches vertically within the div -->
-            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-watauga-blue flex flex-col">
+        
+            <!-- 2. CLIN Performance Status (Cards/Rows) - Spans all columns (Glassmorphism Applied) -->
+            <div class="col-span-full glass-card flex flex-col border-t-4 border-watauga-blue" style="border-top-width: 4px;">
                 <div id="chart-title">CLIN NTE Breakdown</div>
-                <!-- Container for dynamically generated CLIN cards -->
+                <!-- CLIN cards container: Responsive grid for optimal viewing of many CLINs -->
                 <div id="clin-breakdown-container" class="flex-grow">
-                    <!-- CLIN cards will be injected here by JavaScript -->
+                    <!-- CLIN sections and cards will be injected here by JavaScript -->
                 </div>
-                <p class="text-sm text-gray-500 mt-4 text-center">NTE Completion Status by Contract Line Item Number.</p>
+                <p class="text-sm mt-4 text-center">NTE Completion Status by Contract Line Item Number. (Estimated NTE for non-volume CLINs)</p>
             </div>
 
-            <!-- 3. Crew Day Activity Chart (Bar Chart) -->
-            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-watauga-blue">
-                <div id="chart-title">Crew Day Activity</div>
-                <div id="crew-chart" class="flex justify-center items-center h-80">
-                    <svg id="crew-bar-chart" class="w-full h-full"></svg>
-                </div>
-                <p class="text-sm text-gray-500 mt-4 text-center">Total Crew Days by Service Item.</p>
-            </div>
         </div>
 
     </div>
 
     <script>
         // --- Data Setup ---
-        // Data derived from NTE.csv, CLIN PIVOT.csv, and CREWS PIVOT.csv
+        
+        const totalVolumeToDateCY = 34877.87; 
+        const projectDaysElapsed = 58; // Mock: Aug 1 to Sept 28, 2025
+
+        // New Structured Data: Grouped CLINs for Section Titles
+        const clinSections = [
+            {
+                title: "AUTOMATED DEBRIS MANAGEMENT SYSTEM",
+                clin: [
+                    {
+                        clin: "CLIN 0001",
+                        description: "AUTOMATED DEBRIS MANAGEMENT SYSTEM UP TO 500,000 CY",
+                        uom: "CY",
+                        nteQuantity: 364182,
+                        to_date_quantity: 34877.87,
+                        percent: 9.58,
+                    },
+                ]
+            },
+            {
+                title: "CREWS / STAFFING",
+                clin: [
+                    {
+                        clin: "CLIN 0002",
+                        description: "DEBRIS SEPARATION CREW",
+                        uom: "Crew Day",
+                        nteQuantity: 60,
+                        to_date_quantity: 831,
+                        percent: 1385.00,
+                    },
+                    {
+                        clin: "CLIN 0003",
+                        description: "EMERGENCY ROAD CLEARANCE (HHW) CREW",
+                        uom: "Crew Day",
+                        nteQuantity: 30,
+                        to_date_quantity: 18,
+                        percent: 60.00,
+                    },
+                    {
+                        clin: "CLIN 0004",
+                        description: "HOUSEHOLD HAZARDOUS WASTE SEPARATION CREW",
+                        uom: "Crew Day",
+                        nteQuantity: 60,
+                        to_date_quantity: 0,
+                        percent: 0.00,
+                    },
+                    {
+                        clin: "CLIN 0005",
+                        description: "HTRW SEPARATION CREW (MOCK NTE)",
+                        uom: "Crew Day",
+                        nteQuantity: 30,
+                        to_date_quantity: 0,
+                        percent: 0.00,
+                    },
+                ]
+            },
+            {
+                title: "EQUIPMENT (NON-UNIT RATES)",
+                clin: [
+                    {
+                        clin: "CLIN 0006",
+                        description: "DUMP TRUCKS (C&D / VEG) (MOCK NTE)",
+                        uom: "Truck Hr",
+                        nteQuantity: 1500,
+                        to_date_quantity: 350.5,
+                        percent: (350.5 / 1500 * 100).toFixed(2),
+                    },
+                ]
+            },
+            {
+                title: "DEBRIS REMOVAL",
+                clin: [
+                    {
+                        clin: "CLIN 0009",
+                        description: "Vegetative Debris Removal Parcel to DMS FDS (0-15 CY)",
+                        uom: "CY",
+                        nteQuantity: 250000,
+                        to_date_quantity: 60484.49,
+                        percent: (60484.49 / 250000 * 100).toFixed(2),
+                    },
+                    {
+                        clin: "CLIN 0012",
+                        description: "C&D Debris Removal Parcel to DMS FDS (0-15 CY)",
+                        uom: "CY",
+                        nteQuantity: 8000,
+                        to_date_quantity: 1803.00,
+                        percent: (1803.00 / 8000 * 100).toFixed(2),
+                    },
+                    {
+                        clin: "CLIN 0013",
+                        description: "C&D Debris Removal Parcel to DMS FDS (16-30 CY)",
+                        uom: "CY",
+                        nteQuantity: 2000,
+                        to_date_quantity: 111.80,
+                        percent: (111.80 / 2000 * 100).toFixed(2),
+                    },
+                ]
+            },
+            {
+                title: "DISPOSAL / REDUCTION",
+                clin: [
+                    {
+                        clin: "CLIN 0016",
+                        description: "Debris Reduction at DMS Non Urban CD Compact",
+                        uom: "CY",
+                        nteQuantity: 2500,
+                        to_date_quantity: 1023.2,
+                        percent: (1023.2 / 2500 * 100).toFixed(2),
+                    },
+                    {
+                        clin: "CLIN 0017",
+                        description: "Final Dispose Reduced Chips Mulch (31-60 Miles)",
+                        uom: "CY",
+                        nteQuantity: 30000,
+                        to_date_quantity: 14566.40,
+                        percent: (14566.40 / 30000 * 100).toFixed(2),
+                    },
+                    {
+                        clin: "CLIN 0018",
+                        description: "Final Dispose Compact CD (31-60 Miles)",
+                        uom: "CY",
+                        nteQuantity: 3000,
+                        to_date_quantity: 1023.2,
+                        percent: (1023.2 / 3000 * 100).toFixed(2),
+                    },
+                ]
+            },
+            {
+                title: "OTHER PASS-THROUGH",
+                clin: [
+                    {
+                        clin: "CLIN 0020",
+                        description: "TDMS - SITE ACCESSES LEASE (Unencumbered Pass Through)",
+                        uom: "CY",
+                        nteQuantity: 335046, 
+                        to_date_quantity: 33920.47,
+                        percent: 10.12,
+                    },
+                ]
+            }
+        ];
+
         const projectData = {
-            // KPI Data (from NTE.csv)
             projectGoalCY: 364182,
-            volumeToDateCY: 34878,
-            percentComplete: 9.58, // CLIN 0001 NTE % Complete
-
-            crewDaysSeparation: 831,
-            crewDaysERC: 18,
-
-            // Debris Volume Breakdown for Pie Chart
+            volumeToDateCY: totalVolumeToDateCY,
+            percentComplete: 9.58,
+            projectDaysElapsed: projectDaysElapsed,
             volumeBreakdown: [
-                { class: "Vegetative (Non Urban)", cy: 27902, color: "#4CAF50" }, // ~80%
-                { class: "C&D (Non Urban)", cy: 5232, color: "#FF9800" }, // ~15%
-                { class: "Mulch/Reduced Chips", cy: 1744, color: "#795548" } // ~5%
+                { class: "Vegetative (Non Urban)", cy: 27902, color: "#4CAF50" }, 
+                { class: "C&D (Non Urban)", cy: 5232, color: "#FF9800" }, 
+                { class: "Mulch/Reduced Chips", cy: 1744, color: "#795548" }
             ],
-
-            // CLIN Performance Data (NEW STRUCTURE for the requested card visualization)
-            // Note: CLIN 0002 and 0003 are significantly over 100% based on the provided data snippet (831 days vs 60 NTE, and 18 days vs 30 NTE).
-            clinBreakdown: [
-                {
-                    clin: "CLIN 0001",
-                    description: "Automated Debris Management System (CY)",
-                    uom: "CY",
-                    nteQuantity: 364182,
-                    to_date_quantity: 34877.87,
-                    percent: 9.58,
-                },
-                {
-                    clin: "CLIN 0002",
-                    description: "Debris Separation Crew",
-                    uom: "Crew Day",
-                    nteQuantity: 60,
-                    to_date_quantity: 831,
-                    percent: 1385.00, // 831 / 60 * 100
-                },
-                {
-                    clin: "CLIN 0003",
-                    description: "Emergency Road Clearance (HHW) Crew",
-                    uom: "Crew Day",
-                    nteQuantity: 30,
-                    to_date_quantity: 18,
-                    percent: 60.00, // 18 / 30 * 100
-                },
-                {
-                    clin: "CLIN 0004",
-                    description: "HHW Separation Crew",
-                    uom: "Crew Day",
-                    nteQuantity: 60,
-                    to_date_quantity: 0,
-                    percent: 0.00,
-                }
-            ],
-
-            // Crew Day Data for Bar Chart
-            crewActivity: [
-                { type: "Debris Separation", days: 831, color: "#2196F3" },
-                { type: "Emergency Road Clearance", days: 18, color: "#E91E63" }
-            ]
+            clinSections: clinSections, 
         };
 
-        const totalCrewDays = projectData.crewDaysSeparation + projectData.crewDaysERC;
         const totalVolumeBreakdown = projectData.volumeBreakdown.reduce((sum, item) => sum + item.cy, 0);
 
         // --- D3 Charting Functions ---
 
         /**
-         * Renders the Pie Chart for Debris Volume Breakdown. (UNCHANGED)
+         * Renders the Pie Chart for Debris Volume Breakdown.
          */
         function renderVolumeChart() {
             const data = projectData.volumeBreakdown;
             const container = d3.select("#volume-pie-chart");
             container.selectAll("*").remove(); // Clear previous chart
-            const width = 300, height = 300;
+            const width = 400, height = 400; 
             const radius = Math.min(width, height) / 2 - 10;
 
             const svg = container
@@ -200,6 +314,7 @@
                 .innerRadius(0)
                 .outerRadius(radius * 0.8);
 
+            // Use the data colors directly
             const color = d3.scaleOrdinal()
                 .domain(data.map(d => d.class))
                 .range(data.map(d => d.color));
@@ -217,8 +332,8 @@
             arcs.append("path")
                 .attr("d", arc)
                 .attr("fill", d => color(d.data.class))
-                .attr("stroke", "white")
-                .style("stroke-width", "2px")
+                .attr("stroke", "rgba(0, 0, 0, 0.2)") /* Darker border for contrast */
+                .style("stroke-width", "3px")
                 .on("mouseover", (event, d) => {
                     tooltip.transition()
                         .duration(200)
@@ -250,11 +365,13 @@
                 .style("text-anchor", "middle")
                 .style("font-size", "12px")
                 .style("fill", "white")
+                .style("font-weight", "bold")
+                .style("text-shadow", "1px 1px 2px rgba(0,0,0,0.8)")
                 .text(d => (d.data.cy / totalVolumeBreakdown * 100).toFixed(0) + '%')
                 .filter(d => (d.data.cy / totalVolumeBreakdown * 100) < 5) // Hide small labels
                 .remove();
 
-            // Add Legend (Moved to the side of the chart area)
+            // Add Legend
             const legendX = radius + 10;
             const legendY = -radius + 10;
 
@@ -277,153 +394,73 @@
                 .attr("dy", ".35em")
                 .style("text-anchor", "start")
                 .style("font-size", "12px")
-                .style("fill", "#333")
+                .style("fill", "var(--text-color)")
                 .text(d => d.class);
         }
 
         /**
-         * Renders the CLIN Breakdown as a series of individual cards/rows. (REPLACED CHART)
+         * Renders the CLIN Breakdown as a series of individual cards/rows, grouped by section.
          */
         function renderClinBreakdownCards() {
-            const data = projectData.clinBreakdown;
+            const sections = projectData.clinSections;
             const container = document.getElementById('clin-breakdown-container');
             container.innerHTML = ''; // Clear existing content
 
-            const rowsHtml = data.map(item => {
-                const percentText = item.percent.toFixed(2);
-                // Cap the visual bar width at 100% for aesthetic purposes
-                const barWidth = Math.min(100, item.percent); 
-                // Use red if performance is 100% or over (NTE met/exceeded), otherwise use blue
-                const barColor = item.percent >= 100 ? 'bg-red-500' : 'bg-watauga-blue';
-                const textColor = item.percent >= 100 ? 'text-red-600 font-bold' : 'text-watauga-blue';
-                const formattedNTE = item.nteQuantity.toLocaleString();
-                const formattedToDate = item.to_date_quantity.toLocaleString();
-                const status = item.percent >= 100 ? 'EXCEEDED' : 'On Track';
+            const sectionsHtml = sections.map(section => {
+                const cardsHtml = section.clin.map(item => {
+                    let percentValue = parseFloat(item.percent);
+                    if (isNaN(percentValue) && item.nteQuantity > 0) {
+                         percentValue = (item.to_date_quantity / item.nteQuantity * 100);
+                    } else if (isNaN(percentValue)) {
+                        percentValue = 0;
+                    }
+                    
+                    const percentText = percentValue.toFixed(2);
+                    const barWidth = Math.min(100, percentValue); 
+                    const barColor = percentValue >= 100 ? 'bg-red-500' : 'bg-watauga-blue';
+                    const textColor = percentValue >= 100 ? 'text-red-300 font-bold' : 'text-watauga-gold';
+                    const formattedNTE = item.nteQuantity.toLocaleString();
+                    const formattedToDate = item.to_date_quantity.toLocaleString();
+                    const status = percentValue >= 100 ? 'EXCEEDED' : 'On Track';
 
+                    return `
+                        <!-- Individual Row Container (Inner translucent card) -->
+                        <div class="p-3 rounded-xl border border-gray-400/50 bg-white/10 hover:bg-white/20 transition duration-150 shadow-inner">
+                            
+                            <!-- CLIN Header & Percentage -->
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="text-base font-bold text-gray-100">${item.clin}</h4>
+                                <span class="text-sm ${textColor}">${percentText}% Complete</span>
+                            </div>
+
+                            <p class="text-xs text-gray-300 truncate mb-2" title="${item.description}">${item.description}</p>
+
+                            <!-- Progress Bar -->
+                            <div class="w-full bg-white/30 rounded-full h-3 mb-3">
+                                <div class="h-3 rounded-full ${barColor} transition-all duration-700 ease-out" style="width: ${barWidth}%;"></div>
+                            </div>
+
+                            <!-- Metrics Grid -->
+                            <div class="grid grid-cols-3 text-sm text-gray-300 font-medium border-t pt-2 border-white/30">
+                                <div class="truncate">NTE (${item.uom}): <span class="text-white font-extrabold">${formattedNTE}</span></div>
+                                <div class="text-center truncate">To Date: <span class="text-white font-extrabold">${formattedToDate}</span></div>
+                                <div class="text-right truncate">Status: <span class="${textColor} font-extrabold">${status}</span></div>
+                            </div>
+                        </div>
+                        <!-- End Individual Row Container -->
+                    `;
+                }).join('');
+
+                // Section header and responsive grid for its cards
                 return `
-                    <!-- Individual Row Container -->
-                    <div class="bg-gray-50 p-3 rounded-xl shadow-md mb-4 border border-gray-200 hover:shadow-lg transition duration-150">
-                        
-                        <!-- CLIN Header & Percentage -->
-                        <div class="flex justify-between items-center mb-2">
-                            <h4 class="text-base font-bold text-gray-800">${item.clin}</h4>
-                            <span class="text-sm ${textColor}">${percentText}% Complete</span>
-                        </div>
-
-                        <p class="text-xs text-gray-500 truncate mb-2">${item.description}</p>
-
-                        <!-- Progress Bar -->
-                        <div class="w-full bg-gray-200 rounded-full h-3 mb-3">
-                            <div class="h-3 rounded-full ${barColor}" style="width: ${barWidth}%;"></div>
-                        </div>
-
-                        <!-- Metrics Grid -->
-                        <div class="grid grid-cols-3 text-sm text-gray-600 font-medium border-t pt-2 border-gray-100">
-                            <div class="truncate">NTE (${item.uom}): <span class="text-gray-900 font-extrabold">${formattedNTE}</span></div>
-                            <div class="text-center truncate">To Date: <span class="text-gray-900 font-extrabold">${formattedToDate}</span></div>
-                            <div class="text-right truncate">Status: <span class="${textColor} font-extrabold">${status}</span></div>
-                        </div>
+                    <h3 class="clin-section-header">${section.title}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
+                        ${cardsHtml}
                     </div>
-                    <!-- End Individual Row Container -->
                 `;
             }).join('');
 
-            container.innerHTML = rowsHtml;
-        }
-
-
-        /**
-         * Renders the Bar Chart for Crew Day Activity. (UNCHANGED)
-         */
-        function renderCrewChart() {
-            const data = projectData.crewActivity;
-            const container = d3.select("#crew-bar-chart");
-            container.selectAll("*").remove(); // Clear previous chart
-            const margin = { top: 20, right: 20, bottom: 40, left: 100 };
-            const width = 400 - margin.left - margin.right;
-            const height = 320 - margin.top - margin.bottom;
-
-            const svg = container
-                .attr("viewBox", `0 0 400 320`)
-                .append("g")
-                .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-            // X scale (Days)
-            const x = d3.scaleLinear()
-                .domain([0, d3.max(data, d => d.days) + 100])
-                .range([0, width]);
-
-            // Y scale (Crew Type)
-            const y = d3.scaleBand()
-                .domain(data.map(d => d.type))
-                .range([0, height])
-                .padding(0.3);
-
-            // Add X-axis
-            svg.append("g")
-                .attr("transform", `translate(0, ${height})`)
-                .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format(".0s")))
-                .selectAll("text")
-                .style("font-size", "10px");
-
-            // Add Y-axis
-            svg.append("g")
-                .call(d3.axisLeft(y))
-                .selectAll("text")
-                .style("font-size", "12px");
-
-            // Create Tooltip
-            const tooltip = d3.select("body").append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0);
-
-            // Draw the bars
-            svg.selectAll(".bar")
-                .data(data)
-                .enter().append("rect")
-                .attr("class", "bar")
-                .attr("x", 0)
-                .attr("y", d => y(d.type))
-                .attr("height", y.bandwidth())
-                .attr("fill", d => d.color)
-                .transition() // Animation
-                .duration(800)
-                .attr("width", d => x(d.days));
-
-            // Add interactivity (after transition)
-            svg.selectAll(".bar")
-                .on("mouseover", (event, d) => {
-                    d3.select(event.currentTarget)
-                        .transition()
-                        .duration(150)
-                        .attr("fill", "var(--watauga-gold)"); // Highlight on hover
-                    tooltip.transition()
-                        .duration(200)
-                        .style("opacity", .9);
-                    tooltip.html(`<strong>${d.type}</strong><br/>${d.days.toLocaleString()} Days`)
-                        .style("left", (event.pageX + 10) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", (event, d) => {
-                    d3.select(event.currentTarget)
-                        .transition()
-                        .duration(500)
-                        .attr("fill", d.color); // Restore original color
-                    tooltip.transition()
-                        .duration(500)
-                        .style("opacity", 0);
-                });
-
-            // Add values at the end of the bars
-            svg.selectAll(".label")
-                .data(data)
-                .enter().append("text")
-                .attr("x", d => x(d.days) + 5)
-                .attr("y", d => y(d.type) + y.bandwidth() / 2)
-                .attr("dy", ".35em")
-                .style("font-size", "12px")
-                .style("fill", "#333")
-                .text(d => d.days.toLocaleString());
+            container.innerHTML = sectionsHtml;
         }
 
         /**
@@ -431,38 +468,39 @@
          */
         function renderKPIs() {
             const kpisContainer = document.getElementById('kpis');
-            // Updated KPI title for clarity
+            
             const kpiItems = [
                 { title: "Total Project Goal (CY)", value: projectData.projectGoalCY.toLocaleString(), icon: "fa-bullseye", color: "blue" },
                 { title: "Volume Processed To Date (CY)", value: projectData.volumeToDateCY.toLocaleString(), icon: "fa-truck", color: "green" },
                 { title: "NTE % Complete (CLIN 0001)", value: projectData.percentComplete.toFixed(2) + '%', icon: "fa-check-circle", color: "gold" },
-                { title: "Total Crew Days Expended", value: totalCrewDays.toLocaleString(), icon: "fa-users", color: "red" }
+                { title: "Project Days Elapsed (Mock)", value: projectData.projectDaysElapsed.toLocaleString(), icon: "fa-calendar", color: "red" }
             ];
 
             kpisContainer.innerHTML = kpiItems.map(item => {
                 let iconClass = '';
-                let bgColor = '';
+                let borderColor = '';
                 switch(item.color) {
-                    case 'blue': iconClass = 'bg-blue-500'; bgColor = 'border-blue-500'; break;
-                    case 'green': iconClass = 'bg-green-500'; bgColor = 'border-green-500'; break;
-                    case 'gold': iconClass = 'bg-yellow-500'; bgColor = 'border-yellow-500'; break;
-                    case 'red': iconClass = 'bg-red-500'; bgColor = 'border-red-500'; break;
+                    case 'blue': iconClass = 'bg-blue-500'; borderColor = 'border-blue-500'; break;
+                    case 'green': iconClass = 'bg-green-500'; borderColor = 'border-green-500'; break;
+                    case 'gold': iconClass = 'bg-yellow-500'; borderColor = 'border-yellow-500'; break;
+                    case 'red': iconClass = 'bg-red-500'; borderColor = 'border-red-500'; break;
                 }
 
+                // Apply glass-card to KPI containers
                 return `
-                    <div class="kpi-card bg-white p-6 rounded-xl shadow-md border-b-4 ${bgColor} flex items-center">
-                        <div class="p-3 rounded-full ${iconClass} text-white mr-4">
+                    <div class="glass-card p-6 border-b-4 ${borderColor} flex items-center" style="border-width: 0; border-bottom-width: 4px;">
+                        <div class="p-3 rounded-full ${iconClass} text-white mr-4 shadow-xl">
                             <!-- Using Lucide icons for aesthetics -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity">
                                 ${item.icon.includes('bullseye') ? '<circle cx="12" cy="12" r="10"/><path d="M12 2v20"/><path d="M4.93 4.93l14.14 14.14"/>' : ''}
                                 ${item.icon.includes('truck') ? '<path d="M5 18H3c-1.1 0-2 .9-2 2v2h22v-2c0-1.1-.9-2-2-2h-3"/><path d="M7 18V8h10v10h2c1.1 0 2 .9 2 2v2H5v-2c0-1.1.9-2 2-2zM12 8l4 4-4 4-4-4z"/>' : ''}
                                 ${item.icon.includes('check-circle') ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : ''}
-                                ${item.icon.includes('users') ? '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' : ''}
+                                ${item.icon.includes('calendar') ? '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>' : ''}
                             </svg>
                         </div>
                         <div>
-                            <p class="text-xl font-bold text-gray-800">${item.value}</p>
-                            <p class="text-sm text-gray-500">${item.title}</p>
+                            <p class="text-xl font-bold text-white">${item.value}</p>
+                            <p class="text-sm text-gray-300">${item.title}</p>
                         </div>
                     </div>
                 `;
@@ -475,14 +513,11 @@
         function initDashboard() {
             renderKPIs();
             renderVolumeChart();
-            renderClinBreakdownCards(); // Renders the new CLIN card visualization
-            renderCrewChart();
+            renderClinBreakdownCards();
 
             // Re-render charts on window resize for responsiveness
             window.addEventListener('resize', () => {
                 renderVolumeChart();
-                // renderClinBreakdownCards is purely HTML/CSS, no D3 resize needed
-                renderCrewChart();
             });
         }
 
