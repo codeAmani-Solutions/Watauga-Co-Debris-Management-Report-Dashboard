@@ -87,15 +87,21 @@
             color: var(--watauga-gold);
         }
 
-        /* --- New CSS for Spinning Seal --- */
+        /* --- CSS for Spinning Seal (Animation Definition) --- */
         @keyframes coin-spin {
             from { transform: rotateY(0deg); }
             to { transform: rotateY(360deg); }
         }
 
-        .watauga-seal-spin {
-            animation: coin-spin 5s linear infinite;
-            transform-style: preserve-3d; /* Required for a 3D flip/spin effect */
+        /* Base class: Ensures 3D style is preserved, but no animation by default */
+        .watauga-seal {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out; /* Smooth hover transition if needed */
+        }
+
+        /* Hover class: Applies the animation when the mouse is over the element */
+        .watauga-seal:hover {
+            animation: coin-spin 2s linear infinite; /* Faster spin on hover */
         }
 
         /* Style for the new container wrapping each CLIN section */
@@ -123,10 +129,11 @@
     <div id="app" class="max-w-7xl mx-auto">
         <!-- Dashboard Header & Logos (Frosted Glass Applied) -->
         <header class="flex flex-col sm:flex-row justify-between items-center glass-card mb-8">
-            <!-- Watauga County Seal (Spinning) -->
+            <!-- Watauga County Seal (Spinning on Hover) -->
             <div class="mb-4 sm:mb-0">
                 <!-- Watauga Seal Path -->
-                <img src="assets/watauga_seal.png" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0A3D62/FFFFFF?text=Watauga+Seal';" alt="Seal of Watauga County" class="h-20 w-auto rounded-full shadow-lg watauga-seal-spin">
+                <!-- Note: The class is now 'watauga-seal' and the spin animation is triggered via CSS :hover -->
+                <img src="assets/watauga_seal.png" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0A3D62/FFFFFF?text=Watauga+Seal';" alt="Seal of Watauga County" class="h-20 w-auto rounded-full shadow-lg watauga-seal cursor-pointer">
             </div>
 
             <!-- Title -->
